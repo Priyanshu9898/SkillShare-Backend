@@ -19,12 +19,14 @@ connectDB();
 
 const app = express();
 
+// Using Middlewares
 app.use(express.json());
-app.use(express.urlencoded({
+app.use(
+  express.urlencoded({
     extended: true,
-}));
+  })
+);
 app.use(cookieParser());
-
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -32,7 +34,6 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
-
 
 app.use("/api/v1", course);
 app.use("/api/v1", users);

@@ -79,16 +79,16 @@ UserModel.pre("save", async function (next) {
   });
   
 
-UserModel.methods.getJWTToken = function(){
-    return jwt.sign({
-        _id:this._id,
-    },
-    process.env.JWT_SECRET_KEY
-    , {
-        expiresIn: "15d",
+UserModel.methods.getJWTToken = function () {
 
-    })
-}
+    const secret_key = process.env.JWT_SECRET_KEY;
+    console.log(secret_key);
+    
+    return jwt.sign({ _id: this._id }, secret_key, {
+      expiresIn: "15d",
+    });
+  };
+  
 
 UserModel.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);

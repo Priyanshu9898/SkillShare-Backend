@@ -57,6 +57,8 @@ export const register = catchAsyncError(async (req, res, next) => {
 
 export const login = catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
+
+    console.log(email, password);
   
     if (!email || !password)
       return next(new ErrorHandler("Please enter all field", 400));
@@ -77,6 +79,9 @@ export const login = catchAsyncError(async (req, res, next) => {
 export const logout = catchAsyncError(async (req, res, next) => {
     res.status(200).cookie("token", null, {
         expires: new Date(Date.now()),
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
     }).json({
         success : true,
         message: "You have been logged out Successfully",
@@ -86,18 +91,13 @@ export const logout = catchAsyncError(async (req, res, next) => {
 
 export const getMyProfile = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.user._id);
-
-    if(!user){
-        return next(new ErrorHandler("Not Logged In", 401));
-    }
+    console.log(user);
 
     res.status(200).json({
-        success : true,
-        user,
-
-    })
-
-});
+      success: true,
+      user,
+    });
+  });
 
 export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.user._id);
@@ -413,10 +413,11 @@ export const deleteUser = catchAsyncError(async (req, res, next) => {
 
 
 User.watch().on("change", async () => {
+
     const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
   
     const subscription = await User.find({ "subscription.status": "active" });
-    
+
     stats[0].users = await User.countDocuments();
     stats[0].subscription = subscription.length;
     stats[0].createdAt = new Date(Date.now());

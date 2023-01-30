@@ -6,10 +6,8 @@ import cloudinary from "cloudinary";
 import { Stats } from "../Models/Stats.js";
 
 export const getAllCourses = catchAsyncError(async (req, res, next) => {
-  const keyword = await req.query.keyword || "";
-  const category = await req.query.category || "";
-
-  
+  const keyword = req.query.keyword || "";
+  const category = req.query.category || "";
 
   const courses = await Course.find({
     title: {
@@ -21,23 +19,26 @@ export const getAllCourses = catchAsyncError(async (req, res, next) => {
       $options: "i",
     },
   }).select("-lectures");
+
+  // console.log(courses);
+
   res.status(200).json({
     success: true,
     courses,
   });
 });
 
-
 export const createCourse = catchAsyncError( async (req, res, next) => {
 
     const {title, description , category, createdBy} = req.body;
+    // console.log(title, description, category, createdBy);
 
     if(!title || !description || !category || !createdBy){
         return next(new ErrorHandler("Please Add all Fields", 400));
     }
 
     const file = req.file;
-    console.log(file);
+    // console.log(file);
 
     const fileUri = getDataUri(file);
 
@@ -174,19 +175,19 @@ export const deleteCourse = catchAsyncError( async (req, res, next) => {
 });
 
 
-Course.watch().on("change", async () => {
-  const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
+// Course.watch().on("change", async () => {
+//   const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
 
-  const courses = await Course.find({});
+//   const courses = await Course.find({});
 
-  let totalViews = 0;
+//   let totalViews = 0;
 
-  for (let i = 0; i < courses.length; i++) {
-    totalViews += courses[i].views;
-  }
+//   for (let i = 0; i < courses.length; i++) {
+//     totalViews += courses[i].views;
+//   }
 
-  stats[0].views = totalViews;
-  stats[0].createdAt = new Date(Date.now());
+//   stats[0].views = totalViews;
+//   stats[0].createdAt = new Date(Date.now());
 
-  await stats[0].save();
-});
+//   await stats[0].save();
+// });

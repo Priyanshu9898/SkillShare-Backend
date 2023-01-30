@@ -15,7 +15,7 @@ export const register = catchAsyncError(async (req, res, next) => {
     const {name, email, password} = req.body;
     const file = req.file;
     // const file = req.file;
-    console.log(name, email, password);
+    // console.log(name, email, password);
 
     if(!name || !email || !password){
         return next(new ErrorHandler("Please Enter All Fields", 400));
@@ -47,7 +47,7 @@ export const register = catchAsyncError(async (req, res, next) => {
 
     );
 
-    console.log(user);
+    // console.log(user);
 
     sendToken(res, user, "Registered Successfully", 201);
     
@@ -58,7 +58,7 @@ export const register = catchAsyncError(async (req, res, next) => {
 export const login = catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
 
-    console.log(email, password);
+    // console.log(email, password);
   
     if (!email || !password)
       return next(new ErrorHandler("Please enter all field", 400));
@@ -77,6 +77,7 @@ export const login = catchAsyncError(async (req, res, next) => {
 
 
 export const logout = catchAsyncError(async (req, res, next) => {
+
     res.status(200).cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
@@ -90,8 +91,9 @@ export const logout = catchAsyncError(async (req, res, next) => {
 
 
 export const getMyProfile = catchAsyncError(async (req, res, next) => {
+    
     const user = await User.findById(req.user._id);
-    console.log(user);
+    // console.log(user);
 
     res.status(200).json({
       success: true,
@@ -125,6 +127,8 @@ export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
 
 export const changePassword = catchAsyncError(async (req, res, next) => {
     const {oldPassword, newPassword} = req.body;
+
+    // console.log(oldPassword, newPassword);
 
     if(!oldPassword || !newPassword){
         return next(new ErrorHandler("Please Enter All the Fields", 401));
@@ -176,6 +180,9 @@ export const updateProfile = catchAsyncError(async (req, res, next) => {
 export const updateProfilePicture = catchAsyncError(async (req, res, next) => {
     
     const file = req.file;
+
+    // console.log(file);
+
     const fileUri = getDataUri(file);
 
     console.log(req.user.avatar.public_id);
@@ -207,6 +214,8 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
     const {email} = req.body;
     // console.log(email);
     const user = await User.findOne({email});
+
+    // console.log(user);
 
     if(!user){
         return next(new ErrorHandler("User Does Not exist", 401));
@@ -376,6 +385,8 @@ export const changeUserRole = catchAsyncError(async (req, res, next) => {
     }
     
     await user.save();
+
+    // console.log(user.role);
 
     res.status(200).json({
         success : true,

@@ -14,9 +14,9 @@ router.route("/createCourse").post(isAuthenticated, authorizedAdmin, singleUploa
 // Add Lectures, Delete Course, Get Course Details - Only Admin
 router.route("/course/:id").get(isAuthenticated, authorizedSubscriber, getAllLectures);
 router.route("/course/:id").post(isAuthenticated, authorizedAdmin, singleUpload, createLectures);
-router.route("/course/:id").delete(isAuthenticated,  authorizedAdmin, singleUpload, deleteLecture);
 router.route("/course/:id").delete(isAuthenticated,  authorizedAdmin, singleUpload, deleteCourse);
-// Delete Lectures
 
+// Delete Lecture
+router.route("/lecture").delete(isAuthenticated, authorizedAdmin, deleteLecture);
 
 export default router;

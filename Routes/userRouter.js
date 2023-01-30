@@ -34,10 +34,10 @@ router.route("/updateProfile").put(isAuthenticated, updateProfile);
 router.route("/updateProfilePicture").put(isAuthenticated, singleUpload , updateProfilePicture);
 
 // Forget Password
-router.route("/forgetPassword").post(isAuthenticated, forgetPassword);
+router.route("/forgetPassword").post(forgetPassword);
 
 // Reset Password
-router.route("/resetPassword/:token").put(isAuthenticated, resetPassword);
+router.route("/resetPassword/:token").put(resetPassword);
 
 // Add to Playlist
 router.route("/addtoplaylist").post(isAuthenticated, addToPlaylist);

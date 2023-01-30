@@ -19,7 +19,7 @@ export const createSubscription = catchAsyncError(async (req, res, next) => {
 
     const plan_id = process.env.PLAN_ID || "plan_L4jiNrtKU5dL2W";
 
-    console.log(plan_id);
+    // console.log(plan_id);
     const subscription = await instance.subscriptions.create({
         plan_id,
         customer_notify : 1,
@@ -50,6 +50,8 @@ export const createSubscription = catchAsyncError(async (req, res, next) => {
 
     const {razorpay_payment_id, razorpay_subscription_id, razorpay_signature} = req.body;
     
+    // console.log(razorpay_payment_id, razorpay_subscription_id, razorpay_signature);
+
     const subscriptionId =  user.subscription.id;
 
 
@@ -58,6 +60,9 @@ export const createSubscription = catchAsyncError(async (req, res, next) => {
     ).digest("hex");
 
     const isAuthentic = generated_signature === razorpay_signature;
+
+    // console.log(isAuthentic);
+
 
     if(!isAuthentic){
         return res.redirect(`${process.env.FRONTEND_URL}/paymentfail`)
@@ -75,7 +80,7 @@ export const createSubscription = catchAsyncError(async (req, res, next) => {
     await user.save();
 
   
-    return res.redirect(`${process.env.FRONTEND_URL}/paymentSuccess?${razorpay_payment_id}`)
+    return res.redirect(`${process.env.FRONTEND_URL}/paymentSuccess?reference=${razorpay_payment_id}`)
 
   });
 
@@ -100,6 +105,8 @@ export const createSubscription = catchAsyncError(async (req, res, next) => {
     const payment = await Payment.findOne({
       razorpay_subscription_id: subscriptionId,
     });
+
+    // console.log(payment);
   
     const gap = Date.now() - payment.createdAt;
   
@@ -123,5 +130,4 @@ export const createSubscription = catchAsyncError(async (req, res, next) => {
     });
   });
   
-
 
